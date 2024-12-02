@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "rest_framework",
+    "uploader",
     "core",
 ]
 

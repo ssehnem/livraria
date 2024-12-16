@@ -28,6 +28,25 @@ class CompraViewSet(ModelViewSet):
             return CompraCreateUpdateSerializer
         return CompraSerializer
     
+    @action(detail=False, methods=["get"])
+    def relatorio_vendas_mes(self, request):
+        agora = timezone.now()
+        inicio_mes = agora.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        compras = Compra.objects.filter(status=Compra.StatusCompra.FINALIZADO, data__gte=inicio_mes)
+
+        total_vendas = sum(compra.total for compra in compras)
+        quantidade_vendas = compras.count()
+
+        return Response(
+            {
+                "status": "Relatório de vendas deste mês",
+                "total_vendas": total_vendas,
+                "quantidade_vendas": quantidade_vendas,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
     @action(detail=True, methods=["post"])
     def finalizar(self, request, pk=None):
         compra = self.get_object()

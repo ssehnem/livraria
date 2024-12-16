@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from core.models import Livro
-from core.serializers import LivroListSerializer, LivroRetrieveSerializer, LivroSerializer, LivroAlterarPrecoSerializer
+from core.serializers import LivroListSerializer, LivroRetrieveSerializer, LivroSerializer, LivroAlterarPrecoSerializer, LivroAjustarEstoqueSerializer
 
 
 class LivroViewSet(ModelViewSet):
@@ -31,4 +31,20 @@ class LivroViewSet(ModelViewSet):
 
         return Response(
             {"detail": f"Preço do livro '{livro.titulo}' atualizado para {livro.preco}."}, status=status.HTTP_200_OK
+        )
+    
+    @action(detail=True, methods=["post"])
+    def ajustar_estoque(self, request, pk=None):
+        livro = self.get_object()
+
+        serializer = LivroAjustarEstoqueSerializer(data=request.data, context={"livro": livro})
+        serializer.is_valid(raise_exception=True)
+
+        quantidade_ajuste = serializer.validated_data["quantidade"]
+
+        livro.quantidade += quantidade_ajuste
+        livro.save()
+
+        return Response(
+            {"status": "Quantidade ajustada com sucesso", "novo_estoque": livro.quantidade}, status=status.HTTP_200_OK
         )

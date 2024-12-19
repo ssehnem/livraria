@@ -15,7 +15,7 @@ class CategoriaViewSet(ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    filterset_fields = ["usuario__email", "status", "data"]
-    search_fields = ["usuario__email"]
-    ordering_fields = ["usuario__email", "status", "data"]
-    ordering = ["-data"]
+    # filterset_fields = ["usuario__email", "status", "data"]
+    # search_fields = ["usuario__email"]
+    # ordering_fields = ["usuario__email", "status", "data"]
+    # ordering = ["-data"]
